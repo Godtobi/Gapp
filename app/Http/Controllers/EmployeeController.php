@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("canViewEmployees")->only("index");
+        $this->middleware("canViewAuthEmployees")->only("authEmployees");
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -82,5 +89,11 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function authEmployees()
+    {
+        $employees = Employee::paginate(10);
+        return view("employees.authEmployees",compact("employees"));
     }
 }

@@ -33,12 +33,13 @@ class Role extends Model
             return $roles;
         }
         elseif (auth()->user()->hasAnyRole("admin")){
-            unset($roles[array_keys("superAdmin")]);
+            unset($roles[array_search("superAdmin",$roles)]);
             return $roles;
         }
         else{
-            unset($roles[array_keys("superAdmin")]);
-            unset($roles[array_keys("admin")]);
+            unset($roles[array_search("superAdmin",$roles)]);
+            unset($roles[array_search("admin",$roles)]);
+            unset($roles[array_search("company",$roles)]);
             return $roles;
         }
     }

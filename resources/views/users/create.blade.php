@@ -8,7 +8,7 @@
     <div class="tab-content">
             <div class="tab-pane tabs-animation fade show active" id="tab-content-1" role="tabpanel">
                 <div class="main-card mb-3 card">
-                    <div class="card-body"><h5 class="card-title">Create Avert</h5>
+                    <div class="card-body"><h5 class="card-title">Create User</h5>
                         <form enctype="multipart/form-data" method="post" action="{{route("users.store")}}">
                             @csrf
 

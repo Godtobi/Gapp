@@ -11,6 +11,13 @@ class CompanyController extends Controller
 {
     use Uploader;
 
+    public function __construct()
+    {
+        $this->middleware("canCreateCompany")->only(["create","store"]);
+        $this->middleware("canViewCompanies")->only(["index","show"]);
+        $this->middleware("canViewAuthCompany")->only(["authCompany"]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -97,4 +104,11 @@ class CompanyController extends Controller
         }
         return response()->json([],200);
     }
+
+    public function authCompany()
+    {
+        $company = auth()->user()->employee->company;
+        return view("companies.show",compact("company"));
+    }
+
 }

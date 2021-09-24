@@ -2,6 +2,13 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\canCreateCompanyMiddleware;
+use App\Http\Middleware\canCreateUserMiddleware;
+use App\Http\Middleware\CanViewAuthEmployees;
+use App\Http\Middleware\canViewCompaniesMiddleware;
+use App\Http\Middleware\canViewEmployeesMiddleware;
+use App\Http\Middleware\canViewPersonalCompanyProfile;
+use App\Http\Middleware\CanViewUsersMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -63,5 +70,15 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        'canCreateCompany'=>canCreateCompanyMiddleware::class,
+        'canViewCompanies'=>canViewCompaniesMiddleware::class,
+        'canViewAuthCompany'=>canViewPersonalCompanyProfile::class,
+
+        'canViewEmployees'=>canViewEmployeesMiddleware::class,
+        'canViewAuthEmployees'=>CanViewAuthEmployees::class,
+
+        'canCreateUsers'=>canCreateUserMiddleware::class,
+        'canViewUsers'=>CanViewUsersMiddleware::class,
     ];
 }

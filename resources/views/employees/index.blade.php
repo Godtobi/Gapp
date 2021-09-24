@@ -1,5 +1,5 @@
 @extends("layouts.app")
-@section("page__title","Companies")
+@section("page__title","Employees")
 @section("page__sub","Overview")
 @section("page__icon")
     <i class="pe-7s-graph text-success"></i>

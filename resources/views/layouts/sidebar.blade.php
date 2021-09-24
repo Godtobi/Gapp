@@ -32,22 +32,34 @@
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
-                <li class="app-sidebar__heading">Vet Menu</li>
+                <li class="app-sidebar__heading"> Menu</li>
 
                 <li>
-                    <a href="/dashboard">
+                    <a href="/">
                         <i class="metismenu-icon  pe-7s-rocket">
                         </i>Dashboard
                     </a>
                 </li>
 
-                <li>
-                    <a href="{{route("companies.index")}}">
-                        <i class="metismenu-icon  pe-7s-box2">
-                        </i>Companies
-                    </a>
-                </li>
+                @if(auth()->user()->hasAnyRole("employee"))
+                    <li>
+                        <a href="/mycompany">
+                            <i class="metismenu-icon  pe-7s-box2">
+                            </i>My Company
+                        </a>
+                    </li>
+                @endif
 
+                @if(auth()->user()->hasAnyRole(['admin','superAdmin']))
+                    <li>
+                        <a href="{{route("companies.index")}}">
+                            <i class="metismenu-icon  pe-7s-box2">
+                            </i>Companies
+                        </a>
+                    </li>
+                @endif
+
+                @if(auth()->user()->hasAnyRole(['superAdmin','admin','company']))
                 <li class="">
                     <a href="#">
                         <i class="metismenu-icon pe-7s-bookmarks"></i>
@@ -64,24 +76,39 @@
                         </li>
                     </ul>
 
-                    <ul class="">
-                        <li>
-                            <a href="{{route("users.index")}}">
-                                <i class="metismenu-icon">
-                                </i>Admins
-                            </a>
-                        </li>
-                    </ul>
+                    @if(auth()->user()->hasAnyRole(['superAdmin','admin']))
+                        <ul class="">
+                            <li>
+                                <a href="{{route("users.index")}}">
+                                    <i class="metismenu-icon">
+                                    </i>Admins
+                                </a>
+                            </li>
+                        </ul>
 
-                    <ul class="">
-                        <li>
-                            <a href="{{route("employees.index")}}">
-                                <i class="metismenu-icon">
-                                </i>Employees
-                            </a>
-                        </li>
-                    </ul>
+                        <ul class="">
+                            <li>
+                                <a href="{{route("employees.index")}}">
+                                    <i class="metismenu-icon">
+                                    </i>Employees
+                                </a>
+                            </li>
+                        </ul>
+                    @endif
+
+                    @if(auth()->user()->hasAnyRole(['company']))
+                        <ul class="">
+                            <li>
+                                <a href="/myemployees">
+                                    <i class="metismenu-icon">
+                                    </i>My Company Employees
+                                </a>
+                            </li>
+                        </ul>
+                    @endif
                 </li>
+
+                @endif
 
                 <li>
                     <a href="widgets-chart-boxes.html" ref="{{ route('logout') }}"

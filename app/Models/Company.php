@@ -22,6 +22,10 @@ class Company extends Model
       return  $this->belongsTo(User::class,"created_by");
     }
 
+    public function employees(){
+        return  $this->hasMany(Employee::class);
+    }
+
     protected static function boot()
     {
         parent::boot();

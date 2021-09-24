@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateUserRequest extends FormRequest
 {
@@ -24,20 +25,23 @@ class CreateUserRequest extends FormRequest
      */
     public function rules()
     {
-        //dd($this->request->all());
-        $roles = Role::getRoleNames();
+
+        $roles = Role::getAuthUserCanCreateRoles();
         $sRole = $this->request->get("role");
-        if (!in_array($sRole,$roles)){
-            throw new \Exception("Invalid role selection");
+        $role = Role::where('name',$sRole)->first();
+
+        if (!in_array($sRole,$roles) || !$role->exists()){
+            $roles = ["c"];
         }
-        if ($sRole=="employee" || $sRole=="company"){
+
+        if (auth()->user()->hasAnyRole(['admin','superAdmin']) && ($sRole == "employee" || $sRole=="company")){
             return [
                 "firstName"=>"required",
                 "lastName"=>"required",
-                "email"=>"required",
+                "email"=>"required|unique:users",
                 "password"=>"required",
                 "phone"=>"",
-                "role"=>"required",
+                "role"=>Rule::in($roles),
                 "company"=>"required_if:role,==,company|required_if:role,==,employee|exists:App\Models\Company,id",
             ];
         }
@@ -45,10 +49,10 @@ class CreateUserRequest extends FormRequest
             return [
                 "firstName"=>"required",
                 "lastName"=>"required",
-                "email"=>"required",
+                "email"=>"required|unique:users",
                 "password"=>"required",
                 "phone"=>"",
-                "role"=>"required",
+                "role"=>Rule::in($roles),
             ];
         }
     }

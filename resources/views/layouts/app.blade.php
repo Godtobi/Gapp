@@ -9,9 +9,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Language" content="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>PetMe</title>
+    <title>App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/>
-    <meta name="description" content="Petme.">
+    <meta name="description" content="App">
 
     <!-- Disable tap highlight on IE -->
     <meta name="msapplication-tap-highlight" content="no">
@@ -28,13 +28,7 @@
     @include("layouts.header")
 
     <div class="app-main">
-        @if(auth()->user()->hasAnyRole(['petmeadmin']))
-            @include("dash.layouts.adminSidebar")
-        @elseif(auth()->user()->hasAnyRole(['user']))
-            @include("dash.layouts.userSidebar")
-        @else
-            @include("layouts.vetsidebar")
-        @endif
+        @include("layouts.sidebar")
         <div class="app-main__outer">
             <div class="app-main__inner">
                 <div class="app-page-title">

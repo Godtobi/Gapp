@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,7 @@ class Employee extends Model
         return $this->belongsTo(User::class,"created_by");
     }
 
+
     protected static function boot()
     {
         parent::boot();
@@ -34,6 +36,14 @@ class Employee extends Model
             $model->created_by = Auth::id();
             if (\auth()->user()->hasAnyRole("company")){
                 $model->company_id = \auth()->user()->employee->company->id;
+            }
+        });
+
+        $user = User::with('employee')->find(Auth::id());
+
+        static::addGlobalScope( function (Builder $builder) use ($user) {
+            if (\auth()->user()->hasAnyRole('company')){
+                $builder->where('company_id', $user->employee->company_id);
             }
         });
     }

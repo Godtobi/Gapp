@@ -27,4 +27,6 @@ Route::group(['middleware' => ['auth'],'namespace' => 'App\Http\Controllers'],fu
     Route::resource("companies","CompanyController");
     Route::resource("employees","EmployeeController");
     Route::resource("users","UserController");
+    Route::get("mycompany","CompanyController@authCompany");
+    Route::get("myemployees","EmployeeController@authEmployees");
 });

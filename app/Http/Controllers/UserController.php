@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("canCreateUsers")->only(['create','store']);
+        $this->middleware("canViewUsers")->only(['index','show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +36,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::getRoleNames();
+        $roles = Role::getAuthUserCanCreateRoles();
         $companies = Company::all();
         return view("users.create",compact('roles','companies'));
     }
@@ -43,17 +49,23 @@ class UserController extends Controller
      */
     public function store(CreateUserRequest $request)
     {
-        $data = $request->validated();
-        //dd($data);
-        $data['name'] = $data['firstName'].$data['lastName'];
-        $data['company_id'] = $data['company'];
-        $data['password'] = Hash::make($data['password']);
-        $employee = Employee::create($data);
-        $user = User::create($data);
-        $user->assignRole($data['role']);
-        $user->employee_id = $employee->id;
-        $user->save();
-        return redirect()->back()->with("success","User created successfully");
+        try {
+            $data = $request->validated();
+            $data['name'] = $data['firstName'].$data['lastName'];
+            $data['company_id'] = isset($data['company']) ? $data['company'] : null;
+            $data['password'] = Hash::make($data['password']);
+            $user = User::create($data);
+            $user->assignRole($data['role']);
+            if ($data['role']=="company" || $data['role']=="employee"){
+                $employee = Employee::create($data);
+                $user->employee_id = $employee->id;
+                $user->save();
+            }
+            return redirect()->back()->with("success","User created successfully");
+        }
+        catch (\Exception $exception){
+            return redirect()->back()->withErrors("Something went wrong. Please try again");
+        }
     }
 
     /**
